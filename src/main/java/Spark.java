@@ -1,22 +1,28 @@
 /**
  * Created by joserubio on 6/27/15.
  */
+import spark.ModelAndView;
+import spark.template.handlebars.HandlebarsTemplateEngine;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import static spark.Spark.*;
 
 public class Spark {
     public static void main(String[] args) {
 
+        //Heroku passes the port to listen on in an environment variable
         String portNumber = System.getenv("PORT");
 
         if( portNumber != null ) {
             port(new Integer(portNumber));
         }
 
-        get("/hello", (req, res) -> {
+        get("/dbtest", (req, res) -> {
 
             Connection connection = null;
             try {
@@ -44,7 +50,17 @@ public class Spark {
 
         });
 
-        get("/", (req, res) -> "Mi casa");
+        get("/:name", (req, res) -> {
+
+                    Map map = new HashMap();
+                    map.put("name", req.params(":name"));
+
+                    return new ModelAndView(map, "hello.hbs");
+
+                }, new HandlebarsTemplateEngine()
+        );
+
+
     }
 
     private static Connection getConnection() throws URISyntaxException, SQLException {
