@@ -9,6 +9,13 @@ import static spark.Spark.*;
 
 public class Spark {
     public static void main(String[] args) {
+
+        String portNumber = System.getenv("PORT");
+
+        if( portNumber != null ) {
+            port(new Integer(portNumber));
+        }
+
         get("/hello", (req, res) -> {
 
             Connection connection = null;
@@ -29,7 +36,10 @@ public class Spark {
             } catch (Exception e) {
                 return "There was an error: " + e.getMessage();
             } finally {
-                if (connection != null) try{connection.close();} catch(SQLException e){}
+                if (connection != null) try {
+                    connection.close();
+                } catch (SQLException e) {
+                }
             }
 
         });
