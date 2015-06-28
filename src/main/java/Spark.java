@@ -2,6 +2,7 @@
  * Created by joserubio on 6/27/15.
  */
 import spark.ModelAndView;
+import spark.Route;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
 import java.net.URI;
@@ -50,15 +51,24 @@ public class Spark {
 
         });
 
+        //A lambda gets attached to the interface it should belong to. It matches the definition in Route.
+        //Just playing because this way we can put the route definition separate from the logic??
+        Route r = (req,res) -> "Lambda local";
+        get("/lambda", r );
+
+        //We can test it here
+        get("/lambdaPassing", LambdaRoute.lambdaRoute());
+
+        //Getting a parameter
         get("/:name", (req, res) -> {
 
-                    Map map = new HashMap();
-                    map.put("name", req.params(":name"));
+            Map map = new HashMap();
+            map.put("name", req.params(":name"));
 
-                    return new ModelAndView(map, "hello.hbs");
+            return new ModelAndView(map, "hello.hbs");
 
-                }, new HandlebarsTemplateEngine()
-        );
+        }, new HandlebarsTemplateEngine());
+
 
 
     }
@@ -73,6 +83,10 @@ public class Spark {
         String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ":" + port + dbUri.getPath();
 
         return DriverManager.getConnection(dbUrl, username, password);
+    }
+
+    interface output {
+        public void print(String a);
     }
 
 }
