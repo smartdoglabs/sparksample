@@ -33,6 +33,8 @@ public class Spark {
             }
 
         });
+
+        get("/", (req, res) -> "Mi casa");
     }
 
     private static Connection getConnection() throws URISyntaxException, SQLException {
